@@ -1,0 +1,336 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" width="device-width">
+    <meta name="author" content="Filipe Belatti" />
+    <meta name="description" content="Sistema para prova P1 de IHC" />
+    <meta name="Resource-type" content="Document" />
+
+    <title>Evento Mágico - Promoção de Eventos</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom styles for this template -->
+    <link href="css/index.css" rel="stylesheet">
+    
+    <!-- jQuery -->
+    <script type="text/javascript" src="js/third-party/jquery-2.1.1.js"></script>
+    
+    <!-- Other js files -->
+    <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+    
+    <script id="myJson" type="application/json">
+    {
+        "Events":[
+            {
+                "id":"1",
+                "name":"Evento 1",
+                "location":"Endereço 1",
+                "date":"01-04-2015",
+                "time":"22:00",
+                "status":"1",
+                "category":{
+                    "cadeira": {
+                        "price":70.00,
+                        "quantityTotal":1000,
+                        "quantityAvailable":307
+                    },
+                    "camarote": {
+                        "price":100.00,
+                        "quantityTotal":200,
+                        "quantityAvailable":93
+                    },
+                    "poltrona": null,
+                    "mesa": null,
+                    "vip": null
+                }
+            },
+            {
+                "id":"2",
+                "name":"Evento 2",
+                "location":"Endereço 2",
+                "date":"10-04-2015",
+                "time":"22:00",
+                "status":"1",
+                "category":{
+                    "cadeira": {
+                        "price":80.00,
+                        "quantityTotal":700,
+                        "quantityAvailable":95
+                    },
+                    "camarote": {
+                        "price":120.00,
+                        "quantityTotal":200,
+                        "quantityAvailable":93
+                    },
+                    "poltrona": {
+                        "price":100.00,
+                        "quantityTotal":300,
+                        "quantityAvailable":0
+                    },
+                    "mesa": null,
+                    "vip": null
+                }
+            },
+            {
+                "id":"3",
+                "name":"Evento 3",
+                "location":"Endereço 3",
+                "date":"01-06-2015",
+                "time":"22:00",
+                "status":"0",
+                "category":{
+                    "cadeira": {
+                        "price":80.00,
+                        "quantityTotal":900,
+                        "quantityAvailable":215
+                    },
+                    "camarote": {
+                        "price":120.00,
+                        "quantityTotal":200,
+                        "quantityAvailable":37
+                    },
+                    "poltrona": null,
+                    "mesa": null,
+                    "vip": {
+                        "price":150.00,
+                        "quantityTotal":100,
+                        "quantityAvailable":7
+                    }
+                }
+            }
+        ]
+    }
+    </script>
+    
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('#myModal').modal('show');
+        
+        loadEventCombo();
+        
+        var backgrounds = [
+           "includes/images/backgrounds/background-1.jpg",
+           "includes/images/backgrounds/background-2.jpg",
+           "includes/images/backgrounds/background-3.jpg"
+        ];
+  
+        var randIndex = parseInt(Math.random() * backgrounds.length, 10);
+        $('body').css('background', '#000 url('+backgrounds[randIndex]+')');
+      });
+    </script>
+    
+  </head>
+  <body>
+    <!-- Modal: Login -->
+    <div class="modal fade modal-login" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">x</button>
+            <h3 class="modal-title">Login em Evento Mágico</h3>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <input type="email" class="form-control" id="login-user" placeholder="Usuário">
+              </div>
+              <div class="form-group">
+                <input type="password" class="form-control" id="login-pwd" placeholder="Senha">
+              </div>
+              <button id="modal-ok" type="button" class="btn btn-standard" data-dismiss="modal">Entrar</button>
+              <p><a href="#">Esqueceu a senha?</a></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+      
+    <!-- Page Content -->
+    <div class="main-container">
+      <!-- Nav Bar -->
+      <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+          <a id="nav-username" class="navbar-brand" href="#"></a>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Sair</a></li>
+          </ul>
+        </div>
+      </nav>
+      
+      <!-- Menu -->
+      <div id="main-menu">
+        <div class="row main-menu-row">
+          <div class="col-sm-4 col-lg-4">
+            <button type="button" class="btn btn-standard btn-lg btn-main-menu" data-toggle="modal" data-target="#modalVender">Vender</button>
+          </div>
+
+          <div class="col-sm-4 col-lg-4">
+            <button type="button" class="btn btn-standard btn-lg btn-main-menu" data-toggle="modal" data-target="#modalGerenciar">Gerenciar</button>
+          </div>
+
+          <div class="col-sm-4 col-lg-4">
+            <button type="button" class="btn btn-standard btn-lg btn-main-menu" data-toggle="modal" data-target="#modalRelatorios">Relatórios</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Main Container -->
+      
+    <!-- Main Content -->
+    <!-- Modal Vender -->
+    <div class="modal fade" id="modalVender" tabindex="-1" role="dialog" aria-labelledby="modalVenderLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">x</button>
+          </div>
+          <div class="modal-body">
+            <!-- Content: Vender -->
+            <div id="content-vender">
+              <div class="row row-margin">
+                <!-- Painel de Dados -->
+                <div class="col-sm-12 col-md-4">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">Dados do Evento</div>
+                    <div class="panel-body">
+                      <form role="form">
+                        <div class="row">
+                          <div class="form-group col-sm-12 col-md-12">
+                            <div class="btn-group">
+                              <a id="comboEvent" class="btn btn-default dropdown-toggle form-type-1" data-toggle="dropdown" href="#">Selecione o evento<span class="caret"></span></a>
+                              <ul id="dropEvent" class="dropdown-menu">
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="form-group col-sm-12 col-md-12">
+                            <div class="btn-group">
+                              <a id="comboCategory" class="btn btn-default dropdown-toggle form-type-1" data-toggle="dropdown" href="#">Selecione a categoria<span class="caret"></span></a>
+                              <ul id="dropCategory" class="dropdown-menu">
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="form-group col-sm-12 col-md-12">
+                            <div class="input-group">
+                              <span class="input-group-addon" id="addon-qtd-disp">Qtde. Disp.</span>
+                              <input id="input-qtd-disp" type="text" class="form-control" aria-describedby="addon-qtd-disp" disabled="disabled">
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="form-group col-sm-12 col-md-12">
+                            <div class="input-group">
+                              <span class="input-group-addon" id="addon-preco-unit">Preço Unit.</span>
+                              <input id="input-preco-unit" type="text" class="form-control" aria-describedby="addon-preco-unit" disabled="disabled">
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="form-group col-sm-12 col-md-12">
+                            <div class="input-group">
+                              <span class="input-group-addon" id="addon-qtd">Qtde.</span>
+                              <input id="input-qtd" type="text" class="form-control" aria-describedby="addon-qtd">
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="form-group col-sm-12 col-md-12">
+                            <button id="add-to-cart" type="button" class="btn btn-standard">Adicionar</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Painel de Carrinho de Compras -->
+                <div class="col-sm-12 col-md-8">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">Carrinho de Compras</div>
+                    <div class="table-responsive">
+                      <table id="table-cart" class="table">
+                        <thead>
+                          <tr>
+                            <th>Evento</th>
+                            <th>Categoria</th>
+                            <th>Valor Unit.</th>
+                            <th>Qtde.</th>
+                            <th>Valor Total</th>
+                            <th>Remover</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row row-margin">
+                <!-- Resumo e Dados do Pagamento -->
+                <div class="col-sm-12 col-md-6">
+                  <div class="input-group">
+                    <span class="input-group-addon" id="addon-preco-total">$ Total</span>
+                    <input id="input-preco-total" type="text" class="form-control" aria-describedby="addon-preco-total" disabled="disabled">
+                  </div>
+                </div>
+                
+                <div class="col-sm-12 col-md-6">
+                  <div class="input-group">
+                    <span class="input-group-addon" id="addon-cpf">CPF Cliente</span>
+                    <input id="input-cpf" type="text" class="form-control" aria-describedby="addon-cpf">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row row-margin">
+                <!-- Resumo e Dados do Pagamento -->
+                <div class="col-sm-12 col-md-6">
+                  <div class="input-group">
+                    <span class="input-group-addon" id="addon-valor-recebido">$ Recebido</span>
+                    <input id="input-valor-recebido" type="text" class="form-control" aria-describedby="addon-valor-recebido">
+                  </div>
+                </div>
+                
+                <div class="col-sm-12 col-md-6">
+                  <div class="input-group">
+                    <span class="input-group-addon" id="addon-troco">Troco</span>
+                    <input id="input-troco" type="text" class="form-control" aria-describedby="addon-troco" disabled="disabled">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row row-margin">
+                <!-- Controles -->
+                <div class="col-sm-12 col-md-12">
+                  <div class="btn-group" role="group">
+                    <button id="btn-finalizar-venda" type="button" class="btn btn-default btn-positive">Finalizar Venda</button>
+                    <button id="btn-cancelar-venda" type="button" class="btn btn-default btn-negative">Cancelar Venda</button>
+                    <button type="button" class="btn btn-default">Abrir Caixa</button>
+                    <button type="button" class="btn btn-default">Fechar Caixa</button>
+                  </div>
+                </div>
+              </div>
+            </div> 
+            <!-- End Content: Vender -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Modal: Vender -->
+    
+    <script type="text/javascript" src="js/util.js"></script>
+  </body>
+</html>

@@ -1,0 +1,81 @@
+{
+  "Events":[
+      {
+          "id":"1",
+          "name":"Evento 1",
+          "location":"Endereço 1",
+          "date":"01-04-2015",
+          "time":"22:00",
+          "status":"1",
+          "category":{
+              "cadeira": {
+                  "price":70.00,
+                  "quantityTotal":1000,
+                  "quantityAvailable":307
+              },
+              "camarote": {
+                  "price":100.00,
+                  "quantityTotal":200,
+                  "quantityAvailable":93
+              },
+              "poltrona": null,
+              "mesa": null,
+              "vip": null
+          }
+      },
+      {
+          "id":"2",
+          "name":"Evento 2",
+          "location":"Endereço 2",
+          "date":"10-04-2015",
+          "time":"22:00",
+          "status":"1",
+          "category":{
+              "cadeira": {
+                  "price":80.00,
+                  "quantityTotal":700,
+                  "quantityAvailable":95
+              },
+              "camarote": {
+                  "price":120.00,
+                  "quantityTotal":200,
+                  "quantityAvailable":93
+              },
+              "poltrona": {
+                  "price":100.00,
+                  "quantityTotal":300,
+                  "quantityAvailable":0
+              },
+              "mesa": null,
+              "vip": null
+          }
+      },
+      {
+          "id":"3",
+          "name":"Evento 3",
+          "location":"Endereço 3",
+          "date":"01-06-2015",
+          "time":"22:00",
+          "status":"0",
+          "category":{
+              "cadeira": {
+                  "price":80.00,
+                  "quantityTotal":900,
+                  "quantityAvailable":215
+              },
+              "camarote": {
+                  "price":120.00,
+                  "quantityTotal":200,
+                  "quantityAvailable":37
+              },
+              "poltrona": null,
+              "mesa": null,
+              "vip": {
+                  "price":150.00,
+                  "quantityTotal":100,
+                  "quantityAvailable":7
+              }
+          }
+      }
+  ]
+}
