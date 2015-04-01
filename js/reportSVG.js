@@ -1,3 +1,5 @@
+var zoom = d3.behavior.zoom();
+
 var w = window,
     d = document,
     e = d.documentElement,
@@ -16,6 +18,7 @@ width = (x - margin.left - margin.right) * 0.5,
 height = (y - margin.top - margin.bottom) * 0.4;
 
 var parseDate = d3.time.format("%Y%m%d").parse;
+var parseTime = d3.time.format("%H").parse;
 
 // Set x scale
 var x = d3.scale.ordinal().rangeRoundBands([0, width], .2);
@@ -38,5 +41,18 @@ var svg = d3.select("#viz")
     .attr("id", "id-svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
+    .attr("pointer-events", "all")
+    .call(zoom.on("zoom", rescale))
+    .on("dblclick.zoom", null)
+    .on("dblclick.", null)
     .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+    .append("g")
+      .attr("id", "g-holder")
+    .append("g")
+      .attr("id", "g-main");
+  
+// reposition g
+function rescale() {
+  d3.select("#g-main").attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
+}

@@ -1,6 +1,10 @@
 var VG_JSON_OBJ = null;
 var VG_CART_COUNT = 0;
-var VG_SELECT_CLAUSE = "$select=evento,categoria,quantidade,valorunitario,datacompra,horacompra&$where=data<20150320";
+var VG_REPORT_TYPE = {
+  VENDAS_PERIODO: 1,
+  VENDAS_DIA_CATEGORIA: 2,
+  VENDAS_CATEGORIA_HORARIO: 3
+}
 
 $('#modal-ok').on('click', function () {
   $('#nav-username').text('Bem vindo, ' + $('#login-user').val() + '!');
@@ -103,7 +107,10 @@ $('#btn-cancelar-venda').on('click', function() {
 });
 
 $('#btn-generate-report').on('click', function() {
-  new generateReport();
+  //TODO: ADICIONAR VALIDAÇÕES DOS FILTROS E APLICAR AS VARIÁVEIS
+  
+  
+  new generateReport(VG_REPORT_TYPE.VENDAS_CATEGORIA_HORARIO);
 });
 
 function updateTotal() {
