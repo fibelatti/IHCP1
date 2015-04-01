@@ -19,6 +19,7 @@
     <script type="text/javascript" src="js/third-party/jquery-2.1.1.js"></script>
     
     <!-- Other js files -->
+    <script type="text/javascript" src="js/third-party/d3.min.js"></script>
     <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
     
     <script id="myJson" type="application/json">
@@ -130,7 +131,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">x</button>
-            <h3 class="modal-title">Login em Evento Mágico</h3>
+            <h4 class="modal-title">Login em Evento Mágico</h4>
           </div>
           <div class="modal-body">
             <form>
@@ -180,12 +181,13 @@
     <!-- End Main Container -->
       
     <!-- Main Content -->
-    <!-- Modal Vender -->
+    <!-- Modal: Vender -->
     <div class="modal fade" id="modalVender" tabindex="-1" role="dialog" aria-labelledby="modalVenderLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">x</button>
+            <h4 class="modal-title">Vender</h4>
           </div>
           <div class="modal-body">
             <!-- Content: Vender -->
@@ -331,6 +333,90 @@
     </div>
     <!-- End Modal: Vender -->
     
+    <!-- Modal: Relatórios -->
+    <div class="modal fade" id="modalRelatorios" tabindex="-1" role="dialog" aria-labelledby="modalRelatoriosrLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">x</button>
+            <h4 class="modal-title">Relatórios</h4>
+          </div>
+          <div class="modal-body">
+            <!-- Content: Relatórios -->
+            <div id="content-relatorios">
+              <div class="row row-margin">
+                <!-- Painel de Filtros -->
+                <div class="col-sm-12 col-md-12">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">Filtros</div>
+                    <div class="panel-body">
+                      <form role="form">
+                        <div class="row">
+                          <div class="form-group col-sm-12 col-md-12">
+                            <div class="btn-group" role="group">
+                              <a id="comboRelatorio" class="btn btn-default dropdown-toggle form-type-1" data-toggle="dropdown" href="#">Selecione o relatório<span class="caret"></span></a>
+                              <ul id="dropRelatorio" class="dropdown-menu">
+                                <li><a href="#">Vendas por período</a></li>
+                                <li><a href="#">Vendas por dia/categoria</a></li>
+                                <li><a href="#">Vendas por categoria/hora</a></li>
+                              </ul>
+                            </div>
+                            <div class="btn-group" role="group">
+                              <a id="comboEventFiltro" class="btn btn-default dropdown-toggle form-type-1" data-toggle="dropdown" href="#">Selecione o evento<span class="caret"></span></a>
+                              <ul id="dropEventFiltro" class="dropdown-menu">
+                                <li><a href="#">Todos</a></li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div class="row">
+                          <div class="col-sm-12 col-md-5">
+                            <div class="input-group">
+                              <span class="input-group-addon" id="addon-filtro-inicio">Início</span>
+                              <input id="input-filtro-inicio" type="text" class="form-control" aria-describedby="addon-filtro-inicio">
+                            </div>
+                          </div>
+                          <div class="col-sm-12 col-md-5">
+                            <div class="input-group">
+                              <span class="input-group-addon" id="addon-filtro-fim">Fim</span>
+                              <input id="input-filtro-fim" type="text" class="form-control" aria-describedby="addon-filtro-fim">
+                            </div>
+                          </div>
+                          <div class="col-sm-12 col-md-2">
+                            <button id="generate-report" type="button" class="btn btn-standard">Gerar</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- End row filtros -->
+              <div class="row row-margin">
+                <!-- Painel de gráfico do relatório -->
+                <div class="col-sm-12 col-md-12">
+                  <div class="panel panel-default">
+                    <div id="panel-report" class="panel-body">
+                      <div class="row">
+                        <div id="viz"></div>
+                      </div>
+                      <div class="row">
+                        <div class="form-group col-sm-12 col-md-12">
+                          <button id="print-report" type="button" class="btn btn-standard">Imprimir</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <script type="text/javascript" src="js/util.js"></script>
+    <script type="text/javascript" src="js/generateReport.js"></script>
   </body>
 </html>

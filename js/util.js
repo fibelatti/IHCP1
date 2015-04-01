@@ -1,5 +1,6 @@
 var VG_JSON_OBJ = null;
 var VG_CART_COUNT = 0;
+var VG_SELECT_CLAUSE = "$select=evento,categoria,quantidade,valorunitario,datacompra,horacompra&$where=data<20150320";
 
 $('#modal-ok').on('click', function () {
   $('#nav-username').text('Bem vindo, ' + $('#login-user').val() + '!');
