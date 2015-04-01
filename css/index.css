@@ -10,9 +10,11 @@ body{
   color: rgba(0,0,0,0.5);
   background-color: #5a5a5a;
   padding-top: 70px;
-  background-size:   cover;
   background-repeat: no-repeat;
-  background-position: center center;  
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 .wrap{
   margin-left: auto;

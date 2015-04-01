@@ -102,6 +102,10 @@ $('#btn-cancelar-venda').on('click', function() {
   clearSaleDataInput();
 });
 
+$('#btn-generate-report').on('click', function() {
+  new generateReport();
+});
+
 function updateTotal() {
   var sum = 0;
 
