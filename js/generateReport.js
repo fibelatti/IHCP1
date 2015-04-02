@@ -1,17 +1,17 @@
 /**
-    *
-    * @param {Const} reportType: VG_REPORT_TYPE
-    * @param {String} event: $('#comboEventFiltro').val()
-    * @param {String} category: 
-    * @param {String} beginInterval:
-    * @param {String} endInterval:
-    */
+  *
+  * @param {Const} reportType: VG_REPORT_TYPE
+  * @param {String} event:
+  * @param {String} category: 
+  * @param {String} beginInterval:
+  * @param {String} endInterval:
+  */
 var generateReport = function(reportType, event, category, beginInterval, endInterval) {
   var filteredData = REPORT_DATA;
   var nest = null;
   
   var color = d3.scale.ordinal()
-    .range(["#f1c40f", "#f39c12", "#e67e22", "#e74c3c", "#c0392b"]);
+    .range(["#e67e22", "#4D4D4D", "#F15854", "#DECF3F", "#5DA5DA"]);
   
   $('#id-svg > g > g > g').empty();
   
@@ -198,6 +198,25 @@ var generateReport = function(reportType, event, category, beginInterval, endInt
       })
       .style("opacity", 0.7);
     
+  var legend = svg.selectAll(".legend")
+      .data(categoryNames.slice().reverse())
+    .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+  legend.append("rect")
+      .attr("x", width - 18)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill", color);
+
+  legend.append("text")
+      .attr("x", width - 24)
+      .attr("y", 9)
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .text(function(d) { return d; });
+    
   } else if (reportType == VG_REPORT_TYPE.VENDAS_CATEGORIA_HORARIO) {
     xAxis.tickFormat(d3.time.format("%H:%M"));
     
@@ -289,6 +308,24 @@ var generateReport = function(reportType, event, category, beginInterval, endInt
       })
       .style("opacity", 0.7);
     
+  var legend = svg.selectAll(".legend")
+      .data(categoryNames.slice().reverse())
+    .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+  legend.append("rect")
+      .attr("x", width - 18)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill", color);
+
+  legend.append("text")
+      .attr("x", width - 24)
+      .attr("y", 9)
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .text(function(d) { return d; });
   }
   
   console.log(nest);
