@@ -19,7 +19,10 @@
     <script type="text/javascript" src="js/third-party/jquery-2.1.1.js"></script>
     
     <!-- Other js files -->
+    <script type="text/javascript" src="js/third-party/d3.min.js"></script>
     <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" src="js/third-party/jquery.maskedinput.min.js"></script>
+    <script type="text/javascript" src="js/third-party/mindmup-editabletable.js"></script>
     
     <script id="myJson" type="application/json">
     {
@@ -118,7 +121,12 @@
         ];
   
         var randIndex = parseInt(Math.random() * backgrounds.length, 10);
-        $('body').css('background', '#000 url('+backgrounds[randIndex]+')');
+        $('body').css('background-image', 'url('+backgrounds[randIndex]+')');
+        
+        $('#table-evento').editableTableWidget();
+        
+        $("#input-data-evento").mask("99/99/9999",{placeholder:"dd/mm/aaaa"});
+        $("#input-hora-evento").mask("99:99",{placeholder:"HH:MM"});
       });
     </script>
     
@@ -130,7 +138,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">x</button>
-            <h3 class="modal-title">Login em Evento Mágico</h3>
+            <h4 class="modal-title">Login em Evento Mágico</h4>
           </div>
           <div class="modal-body">
             <form>
@@ -180,12 +188,13 @@
     <!-- End Main Container -->
       
     <!-- Main Content -->
-    <!-- Modal Vender -->
+    <!-- Modal: Vender -->
     <div class="modal fade" id="modalVender" tabindex="-1" role="dialog" aria-labelledby="modalVenderLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">x</button>
+            <h4 class="modal-title">Vender</h4>
           </div>
           <div class="modal-body">
             <!-- Content: Vender -->
@@ -331,6 +340,261 @@
     </div>
     <!-- End Modal: Vender -->
     
+    <!-- Modal: Gerenciar -->
+    <div class="modal fade" id="modalGerenciar" tabindex="-1" role="dialog" aria-labelledby="modalGerenciarLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">x</button>
+            <h4 class="modal-title">Gerenciar</h4>
+          </div>
+          <div class="modal-body">
+            <!-- Content: Gerenciar -->
+            <div id="content-gerenciar">
+              <div class="row row-margin">
+                <div class="col-sm-12 col-md-12">
+                  <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default">Novo Evento</button>
+                    <button id="btn-novo-evento" type="button" class="btn btn-default btn-positive">Salvar Evento</button>
+                    <button id="btn-excluir-evento" type="button" class="btn btn-default btn-negative">Excluir Evento</button>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row row-margin">
+                <!-- Painel de Dados -->
+                <div class="col-sm-12 col-md-12">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">Dados do Evento</div>
+                    <div class="panel-body">
+                      <form role="form">
+                        <div class="row">
+                          <div class="form-group col-sm-12 col-md-12">
+                            <div class="input-group">
+                              <div class="input-group-btn">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Nome do Evento<span class="caret"></span></button>
+                                <ul id="dropGerenciarEvento" class="dropdown-menu" role="menu">
+                                </ul>
+                              </div>
+                              <input type="text" class="form-control" aria-label="nomeDoEvento">
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="form-group col-sm-12 col-md-12">
+                            <div class="input-group">
+                              <span class="input-group-addon" id="addon-qtd-disp">Local</span>
+                              <input id="input-local-evento" type="text" class="form-control" aria-describedby="addon-local-evento">
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="form-group col-sm-12 col-md-6">
+                            <div class="input-group">
+                              <span class="input-group-addon" id="addon-qtd-disp">Data</span>
+                              <input id="input-data-evento" type="text" class="form-control" aria-describedby="addon-data-evento">
+                            </div>
+                          </div>
+                          
+                          <div class="form-group col-sm-12 col-md-6">
+                            <div class="input-group">
+                              <span class="input-group-addon" id="addon-qtd-disp">Hora</span>
+                              <input id="input-hora-evento" type="text" class="form-control" aria-describedby="addon-hora-evento">
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row row-margin">
+                <!-- Tabela de informações -->
+                <div class="col-sm-12 col-md-12">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">Dados dos ingressos</div>
+                    <div class="panel-body">
+                      <div class="table-responsive">
+                        <table id="table-evento" class="table">
+                          <thead>
+                            <tr>
+                              <th>Categoria</th>
+                              <th>Valor Unit.</th>
+                              <th>Qtde. Total</th>
+                              <th>Qtde. Vendidos</th>
+                              <th>Qtde. Disp.</th>
+                              <th>Núm. Inicial</th>
+                              <th>Núm. Final</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <th scope="row">Cadeira</th>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Camarote</th>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Poltrona</th>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Mesa</th>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                            </tr>
+                            <tr>
+                              <th scope="row">VIP</th>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                            </tr>
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                              <th><strong>TOTAL</strong></th>
+                              <th>-</th>
+                              <th></th>
+                              <th></th>
+                              <th></th>
+                              <th>-</th>
+                              <th>-</th>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> 
+            <!-- End Content: Gerenciar -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Modal: Gerenciar -->
+    
+    <!-- Modal: Relatórios -->
+    <div class="modal fade" id="modalRelatorios" tabindex="-1" role="dialog" aria-labelledby="modalRelatoriosrLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">x</button>
+            <h4 class="modal-title">Relatórios</h4>
+          </div>
+          <div class="modal-body">
+            <!-- Content: Relatórios -->
+            <div id="content-relatorios">
+              <div class="row row-margin">
+                <!-- Painel de Filtros -->
+                <div class="col-sm-12 col-md-12">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">Filtros</div>
+                    <div class="panel-body">
+                      <form role="form">
+                        <div class="row">
+                          <div class="form-group col-sm-12 col-md-12">
+                            <div class="btn-group" role="group">
+                              <a id="comboRelatorio" class="btn btn-default dropdown-toggle form-type-1" data-toggle="dropdown" href="#">Selecione o relatório<span class="caret"></span></a>
+                              <ul id="dropRelatorio" class="dropdown-menu">
+                                <li><a href="#">Vendas por período</a></li>
+                                <li><a href="#">Vendas por dia/categoria</a></li>
+                                <li><a href="#">Vendas por categoria/hora</a></li>
+                              </ul>
+                            </div>
+                            <div class="btn-group" role="group">
+                              <a id="comboEventFiltro" class="btn btn-default dropdown-toggle form-type-1" data-toggle="dropdown" href="#">Selecione o evento<span class="caret"></span></a>
+                              <ul id="dropEventFiltro" class="dropdown-menu">
+                                <li><a href="#">Todos</a></li>
+                              </ul>
+                            </div>
+                            <div class="btn-group" role="group">
+                              <a id="comboCategoryFiltro" class="btn btn-default dropdown-toggle form-type-1" data-toggle="dropdown" href="#" disabled="disabled">Selecione a categoria<span class="caret"></span></a>
+                              <ul id="dropCategoryFiltro" class="dropdown-menu">
+                                <li><a href="#">Todas</a></li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div class="row">
+                          <div class="col-sm-12 col-md-5">
+                            <div class="input-group">
+                              <span class="input-group-addon" id="addon-filtro-inicio">Início</span>
+                              <input id="input-filtro-inicio" type="text" class="form-control" aria-describedby="addon-filtro-inicio" disabled="disabled">
+                            </div>
+                          </div>
+                          <div class="col-sm-12 col-md-5">
+                            <div class="input-group">
+                              <span class="input-group-addon" id="addon-filtro-fim">Fim</span>
+                              <input id="input-filtro-fim" type="text" class="form-control" aria-describedby="addon-filtro-fim" disabled="disabled">
+                            </div>
+                          </div>
+                          <div class="col-sm-12 col-md-2">
+                            <button id="btn-generate-report" type="button" class="btn btn-standard">Gerar</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- End row filtros -->
+              <div class="row row-margin">
+                <!-- Painel de gráfico do relatório -->
+                <div class="col-sm-12 col-md-12">
+                  <div class="panel panel-default">
+                    <div id="panel-report" class="panel-body">
+                      <div class="row">
+                        <div id="viz"></div>
+                      </div>
+                      <div class="row">
+                        <div class="form-group col-sm-12 col-md-12">
+                          <button id="print-report" type="button" class="btn btn-standard">Imprimir</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <script type="text/javascript" src="js/util.js"></script>
+    <script type="text/javascript" src="js/reportSVG.js"></script>
+    <script type="text/javascript" src="js/reportData.js"></script>
+    <script type="text/javascript" src="js/generateReport.js"></script>
   </body>
 </html>

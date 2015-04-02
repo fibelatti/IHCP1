@@ -1,5 +1,10 @@
 var VG_JSON_OBJ = null;
 var VG_CART_COUNT = 0;
+var VG_REPORT_TYPE = {
+  VENDAS_PERIODO: 1,
+  VENDAS_DIA_CATEGORIA: 2,
+  VENDAS_CATEGORIA_HORARIO: 3
+}
 
 $('#modal-ok').on('click', function () {
   $('#nav-username').text('Bem vindo, ' + $('#login-user').val() + '!');
@@ -101,6 +106,128 @@ $('#btn-cancelar-venda').on('click', function() {
   clearSaleDataInput();
 });
 
+$('#dropRelatorio').on('click', function () {
+  switch($('#comboRelatorio').text().trim()) {
+      case "Vendas por período":
+        $('#addon-filtro-inicio').html('Data Início');
+        $('#addon-filtro-fim').html('Data Fim');
+
+      
+        $('#comboCategoryFiltro').html('Selecione a categoria<span class="caret"></span>');
+        $('#comboCategoryFiltro').attr('disabled', true);
+        $('#input-filtro-inicio').attr('disabled', false);
+        $('#input-filtro-fim').attr('disabled', false);
+      
+        $("#input-filtro-inicio").mask("99/99/9999",{placeholder:"dd/mm/aaaa"});
+        $("#input-filtro-fim").mask("99/99/9999",{placeholder:"dd/mm/aaaa"});
+        break;
+      case "Vendas por dia/categoria":
+        $('#addon-filtro-inicio').html('Data Início');
+        $('#addon-filtro-fim').html('Data Fim');
+
+        $('#comboCategoryFiltro').attr('disabled', false);
+        $('#input-filtro-inicio').attr('disabled', false);
+        $('#input-filtro-fim').attr('disabled', false);
+      
+        $("#input-filtro-inicio").mask("99/99/9999",{placeholder:"dd/mm/aaaa"});
+        $("#input-filtro-fim").mask("99/99/9999",{placeholder:"dd/mm/aaaa"});
+        break;
+      case "Vendas por categoria/hora":
+        $('#addon-filtro-inicio').html('Hora Início');
+        $('#addon-filtro-fim').html('Hora Fim');
+
+        $('#comboCategoryFiltro').attr('disabled', false);
+        $('#input-filtro-inicio').attr('disabled', false);
+        $('#input-filtro-fim').attr('disabled', false);
+      
+        $("#input-filtro-inicio").mask("99:99",{placeholder:"HH:MM"});
+        $("#input-filtro-fim").mask("99:99",{placeholder:"HH:MM"});
+        break;
+    }
+});
+
+$('#dropEventFiltro').on('click', function() {
+  $('#dropCategoryFiltro').empty().parents('.btn-group').find('.dropdown-toggle').html('Selecione a categoria<span class="caret"></span>');
+  
+  var obj = JSON.parse($('#myJson').html());
+  var items = [];
+  
+  items.push('<li><a href="#">Todas</a></li>');
+  
+  for (var i=0; i < obj.Events.length; i++){
+    if (obj.Events[i].name.trim() == $('#comboEventFiltro').text().trim()) {
+      VG_JSON_OBJ = obj.Events[i];
+      
+      for (var key in obj.Events[i].category){
+        if (obj.Events[i].category[key] != null){
+          items.push('<li><a href="#">' + key + '</a></li>');
+        }
+      }
+    }
+  }
+  $('#dropCategoryFiltro').append(items.join(''));
+});
+
+$('#btn-generate-report').on('click', function() {
+  var fEvento = null;
+  var fCategoria = null;
+  var fInicio = null;
+  var fFim = null;
+  
+  if ($('#comboRelatorio').text().trim() == "Selecione o relatório") {
+    alert("Selecione o relatório!");
+  } else if ($('#comboEventFiltro').text().trim() == "Selecione o evento") {
+    alert("Selecione o evento!");
+  } else {
+    switch($('#comboRelatorio').text().trim()) {
+      case "Vendas por período":
+        //IF DATE DIFF OK
+        
+        if ($('#comboEventFiltro').text().trim() != "Todos") {
+          fEvento == $('#comboEventFiltro').text().trim();
+        }
+        
+        new generateReport(VG_REPORT_TYPE.VENDAS_PERIODO, fEvento, fCategoria, fInicio, fFim);
+
+        break;
+      case "Vendas por dia/categoria":
+        //IF DATE DIFF OK
+        
+        if ($('#comboCategoryFiltro').text().trim() == "Selecione a categoria") {
+          alert("Selecione a categoria!");
+        } else {
+          if ($('#comboEventFiltro').text().trim() != "Todos") {
+            fEvento == $('#comboEventFiltro').text().trim();
+          }
+
+          if ($('#comboCategoryFiltro').text().trim() != "Todas") {
+            fCategoria == $('#comboCategoryFiltro').text().trim();
+          }
+
+          new generateReport(VG_REPORT_TYPE.VENDAS_DIA_CATEGORIA, fEvento, fCategoria, fInicio, fFim);
+        }
+        
+        break;
+      case "Vendas por categoria/hora":
+        if ($('#comboCategoryFiltro').text().trim() == "Selecione a categoria") {
+          alert("Selecione a categoria!");
+        } else {
+          if ($('#comboEventFiltro').text().trim() != "Todos") {
+            fEvento == $('#comboEventFiltro').text().trim();
+          }
+
+          if ($('#comboCategoryFiltro').text().trim() != "Todas") {
+            fCategoria == $('#comboCategoryFiltro').text().trim();
+          }
+
+          new generateReport(VG_REPORT_TYPE.VENDAS_CATEGORIA_HORARIO, fEvento, fCategoria, fInicio, fFim);
+        }
+
+        break;
+    }
+  }
+});
+
 function updateTotal() {
   var sum = 0;
 
@@ -139,15 +266,25 @@ function getNewDate(oldDate, diff) {
 function loadEventCombo() {
   var obj = JSON.parse($('#myJson').html());
   var items = [];
+  var itemsFiltro = [];
   for (var i=0; i < obj.Events.length; i++){
     if (obj.Events[i].status == 1){
       items.push('<li><a href="#">' + obj.Events[i].name + '</a></li>');
     } else {
-     items.push('<li class="disabled"><a href="#">' + obj.Events[i].name + ' (Disponível em ' + getNewDate(obj.Events[i].date, -30) + ')</a></li>'); 
+      items.push('<li class="disabled"><a href="#">' + obj.Events[i].name + ' (Disponível em ' + getNewDate(obj.Events[i].date, -30) + ')</a></li>'); 
     }
+    itemsFiltro.push('<li><a href="#">' + obj.Events[i].name + '</a></li>');
   }
   $('#dropEvent').append(items.join(''));
+  $('#dropEventFiltro').append(itemsFiltro.join(''));
+  $('#dropGerenciarEvento').append(itemsFiltro.join(''));
 }
+
+function isValidDate(s) {
+  var bits = s.split('/');
+  var d = new Date(bits[2], bits[1] - 1, bits[0]);
+  return d && (d.getMonth() + 1) == bits[1] && d.getDate() == Number(bits[0]);
+} 
 
 Number.prototype.format = function(n, x, s, c) {
     var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',

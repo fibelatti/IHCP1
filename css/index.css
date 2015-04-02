@@ -10,9 +10,11 @@ body{
   color: rgba(0,0,0,0.5);
   background-color: #5a5a5a;
   padding-top: 70px;
-  background-size:   cover;
   background-repeat: no-repeat;
-  background-position: center center;  
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 .wrap{
   margin-left: auto;
@@ -150,11 +152,13 @@ body.modal-open .main-container{
   width: 50px;
 }
 
+/*
 .input-group-addon {
   width: 100px;
   min-width: 100px;
   max-width: 100px;
 }
+*/
 
 .table-responsive {
   max-height: 40%;
@@ -171,6 +175,19 @@ body.modal-open .main-container{
 
 .main-menu-row {
   margin: 10%;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: grey;
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+  font-family: sans-serif;
+  font-size: 11px;
 }
 
 .shadow {
@@ -196,4 +213,7 @@ body.modal-open .main-container{
     rgb(163, 168, 172) 8px 8px,
     rgb(176, 181, 185) 9px 9px,
     rgb(189, 195, 199) 10px 10px;
+}
+.input-group-addon {
+  
 }
